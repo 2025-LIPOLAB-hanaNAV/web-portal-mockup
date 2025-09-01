@@ -1,8 +1,10 @@
 {
-  "name": "web-portal-mockup",
+  "name": "hana-portal-mockup",
+  "description": "하나 금융그룹 포털 시스템 목업",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "homepage": "https://hana-portal-mockup.vercel.app",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

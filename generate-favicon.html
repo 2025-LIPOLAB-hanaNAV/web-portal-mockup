@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Favicon Generator</title>
+</head>
+<body>
+    <canvas id="canvas32" width="32" height="32"></canvas>
+    <canvas id="canvas16" width="16" height="16"></canvas>
+    <canvas id="canvas180" width="180" height="180"></canvas>
+    <br>
+    <button onclick="downloadFavicons()">Download Favicons</button>
+    
+    <script>
+        function drawFavicon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            const scale = size / 32;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Background circle with Hana Green
+            ctx.fillStyle = '#00856A';
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size/2, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Letter H
+            ctx.fillStyle = 'white';
+            ctx.fillRect(2*scale + size/4, 2*scale + size/4, 2*scale, 12*scale);
+            ctx.fillRect(12*scale + size/4, 2*scale + size/4, 2*scale, 12*scale);
+            ctx.fillRect(4*scale + size/4, 7*scale + size/4, 6*scale, 2*scale);
+            
+            // Accent dot
+            ctx.beginPath();
+            ctx.arc(8*scale + size/4, 4*scale + size/4, 1*scale, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+        
+        function downloadCanvas(canvas, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        function downloadFavicons() {
+            // Draw favicons
+            drawFavicon(document.getElementById('canvas32'), 32);
+            drawFavicon(document.getElementById('canvas16'), 16);
+            drawFavicon(document.getElementById('canvas180'), 180);
+            
+            // Download
+            downloadCanvas(document.getElementById('canvas32'), 'favicon-32x32.png');
+            downloadCanvas(document.getElementById('canvas16'), 'favicon-16x16.png');
+            downloadCanvas(document.getElementById('canvas180'), 'apple-touch-icon.png');
+        }
+        
+        // Auto generate on page load
+        window.onload = function() {
+            drawFavicon(document.getElementById('canvas32'), 32);
+            drawFavicon(document.getElementById('canvas16'), 16);
+            drawFavicon(document.getElementById('canvas180'), 180);
+        }
+    </script>
+</body>
+</html>
