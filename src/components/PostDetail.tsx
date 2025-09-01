@@ -52,7 +52,7 @@ const PostDetail = () => {
       
       // 개발 중에는 mock 데이터 사용
       const mockData: PostDetailData = {
-        id: postId,
+        id: postId || 'unknown',
         title: '금융소비자보호부 담당 업무 안내',
         department: '금융소비자보호부',
         author: '홍길동',
