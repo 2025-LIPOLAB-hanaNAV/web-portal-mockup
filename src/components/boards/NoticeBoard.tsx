@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import './BulletinBoard.css'
+import { useNavigate } from 'react-router-dom'
+import '../BulletinBoard.css'
 
 interface Post {
   id: string
@@ -16,95 +17,57 @@ interface Post {
   hasAttachment: boolean
 }
 
-const BulletinBoard = () => {
+const NoticeBoard = () => {
+  const navigate = useNavigate()
   const [posts, setPosts] = useState<Post[]>([])
 
   useEffect(() => {
     const samplePosts: Post[] = [
       {
-        id: '0401r2jxl',
-        isUnread: true,
+        id: 'notice_001',
+        isUnread: false,
         isModified: false,
-        category: '기타',
-        title: '금융소비자보호부 담당 업무 안내',
-        department: '금융소비자보호부',
-        author: '윤종희',
-        views: 528,
-        postDate: '2025-07-24',
+        category: '공지',
+        title: '2025년 신년 인사',
+        department: '경영진',
+        author: '김회장',
+        views: 1523,
+        postDate: '2025-01-01',
         endDate: '2025-12-31',
         badges: ['notice'],
         hasAttachment: false
       },
       {
-        id: '0001r24yt',
+        id: 'notice_002',
         isUnread: true,
-        isModified: true,
-        category: '기타',
-        title: '★문진제도 개선 시행 안내 및 Q&A',
-        department: '금융소비자보호부',
-        author: '김동우',
-        views: 1002,
-        postDate: '2025-07-07',
-        endDate: '2027-12-31',
+        isModified: false,
+        category: '공지',
+        title: '시스템 점검 안내 (1월 25일)',
+        department: 'IT운영팀',
+        author: '이과장',
+        views: 342,
+        postDate: '2025-01-20',
+        endDate: '2025-01-26',
         badges: ['notice', 'emergency'],
         hasAttachment: true
-      },
-      {
-        id: '0401r1qzr',
-        isUnread: true,
-        isModified: true,
-        category: '기타',
-        title: '입출금 계좌 신규시 금융거래한도계좌 신규 선택 항목 추가 안내',
-        department: '금융소비자보호부',
-        author: '김동우',
-        views: 698,
-        postDate: '2025-06-19',
-        endDate: '2025-06-19',
-        badges: ['notice'],
-        hasAttachment: false
-      },
-      {
-        id: '0401r2abc',
-        isUnread: true,
-        isModified: false,
-        category: '기타',
-        title: '법인·개인사업자 신규 계좌 개설시 유의 사항 안내',
-        department: '금융소비자보호부',
-        author: '이승주',
-        views: 1015,
-        postDate: '2025-06-13',
-        endDate: '2025-06-13',
-        badges: ['notice'],
-        hasAttachment: false
-      },
-      {
-        id: '0401r3def',
-        isUnread: false,
-        isModified: false,
-        category: '전기통신사기',
-        title: '「투자자의 유형별 통신사기범죄 대응 방안 가이드」',
-        department: '금융소비자보호부',
-        author: '이승주',
-        views: 660,
-        postDate: '2025-05-09',
-        endDate: '2026-05-09',
-        badges: ['notice'],
-        hasAttachment: false
       }
     ]
     setPosts(samplePosts)
   }, [])
 
+  const handlePostClick = (postId: string) => {
+    navigate(`/boards/notice/posts/${postId}`)
+  }
+
   return (
     <main className="main-content">
       <div className="content-header">
-        <h2>보이스피싱 지킴이</h2>
+        <h2>공지게시판</h2>
         <div className="board-info">
-          <span className="post-count">86</span>
-          <span>전기통신금융사기</span>
-          <span>전자금융사고</span>
-          <span>보이스피싱사례</span>
-          <span>기타</span>
+          <span className="post-count">{posts.length}</span>
+          <span>전체공지</span>
+          <span>중요공지</span>
+          <span>일반공지</span>
         </div>
       </div>
 
@@ -130,21 +93,17 @@ const BulletinBoard = () => {
       <div className="content-table bbs-tbl">
         <table>
           <colgroup>
-            <col style={{width: '35px'}} />
-            <col style={{width: '27px'}} />
-            <col style={{width: '30px'}} />
+            <col style={{width: '60px'}} />
+            <col style={{width: '120px'}} />
+            <col style={{width: 'auto'}} />
+            <col style={{width: '140px'}} />
+            <col style={{width: '80px'}} />
+            <col style={{width: '60px'}} />
             <col style={{width: '90px'}} />
-            <col style={{width: '100%'}} />
-            <col style={{width: '110px'}} />
-            <col style={{width: '70px'}} />
-            <col style={{width: '50px'}} />
-            <col style={{width: '85px'}} />
             <col style={{width: '90px'}} />
           </colgroup>
           <thead>
             <tr>
-              <th></th>
-              <th></th>
               <th>상태</th>
               <th>말머리</th>
               <th className="title">제목</th>
@@ -159,13 +118,7 @@ const BulletinBoard = () => {
             {posts.map((post) => (
               <tr key={post.id} className={post.isUnread ? 'unread' : ''}>
                 <td>
-                  <input type="checkbox" />
-                </td>
-                <td>
-                  <input type="checkbox" className="flag" />
-                </td>
-                <td>
-                  <span className={`ico-board ${post.isUnread ? 'unread' : ''} ${post.isModified ? 'modify' : ''}`}></span>
+                  <span className="status-text">{post.isUnread ? '읽지않음' : '읽음'}</span>
                 </td>
                 <td>
                   <a href="#" onClick={(e) => e.preventDefault()}>
@@ -177,7 +130,14 @@ const BulletinBoard = () => {
                     {post.badges.includes('notice') && <span className="badge notice">공지</span>}
                     {post.badges.includes('emergency') && <span className="badge emergency">긴급</span>}
                     {post.hasAttachment && <span className="ico file" title="첨부파일">📎</span>}
-                    <a href="#" onClick={(e) => e.preventDefault()} className="subject">
+                    <a 
+                      href="#" 
+                      onClick={(e) => {
+                        e.preventDefault()
+                        handlePostClick(post.id)
+                      }} 
+                      className="subject"
+                    >
                       {post.title}
                     </a>
                   </div>
@@ -198,10 +158,10 @@ const BulletinBoard = () => {
       </div>
 
       <div className="pagination">
-        <span className="page-info">1 / 5</span>
+        <span className="page-info">1 / 1</span>
       </div>
     </main>
   )
 }
 
-export default BulletinBoard
+export default NoticeBoard

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OG Image Generator</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .og-container {
+            width: 1200px;
+            height: 630px;
+            background: linear-gradient(135deg, #00856A 0%, #4a9b8a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .og-content {
+            text-align: center;
+            color: white;
+            z-index: 2;
+        }
+        
+        .og-title {
+            font-size: 64px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .og-subtitle {
+            font-size: 32px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .og-description {
+            font-size: 24px;
+            max-width: 800px;
+            line-height: 1.4;
+            opacity: 0.8;
+        }
+        
+        .og-badge {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            background: rgba(255,255,255,0.2);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .og-logo {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: bold;
+            color: #00856A;
+        }
+        
+        .bg-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.2) 1px, transparent 1px),
+                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.2) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        .feature-list {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        
+        .feature-item {
+            background: rgba(255,255,255,0.1);
+            padding: 16px 24px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        canvas {
+            border: 2px solid #ddd;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="og-container" id="ogContainer">
+        <div class="bg-pattern"></div>
+        <div class="og-logo">H</div>
+        <div class="og-badge">MOCKUP</div>
+        
+        <div class="og-content">
+            <div class="og-title">하나 금융그룹 포털</div>
+            <div class="og-subtitle">통합 관리 시스템</div>
+            <div class="og-description">
+                게시판, 보이스피싱 지킴이, 수신/여신/외환 업무를<br>
+                한눈에 관리할 수 있는 포털 시스템 목업
+            </div>
+            
+            <div class="feature-list">
+                <div class="feature-item">📋 게시판 관리</div>
+                <div class="feature-item">🛡️ 보이스피싱 지킴이</div>
+                <div class="feature-item">🏦 금융업무 통합</div>
+            </div>
+        </div>
+    </div>
+    
+    <br><br>
+    
+    <canvas id="canvas" width="1200" height="630"></canvas>
+    <br>
+    <button onclick="generateImage()" style="padding: 10px 20px; font-size: 16px; background: #00856A; color: white; border: none; border-radius: 4px; cursor: pointer;">Generate OG Image</button>
+    <button onclick="downloadImage()" style="padding: 10px 20px; font-size: 16px; background: #4a9b8a; color: white; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px;">Download PNG</button>
+    
+    <script>
+        function generateImage() {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, 1200, 630);
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
+            gradient.addColorStop(0, '#00856A');
+            gradient.addColorStop(1, '#4a9b8a');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 1200, 630);
+            
+            // Background pattern
+            ctx.fillStyle = 'rgba(255,255,255,0.1)';
+            for(let x = 0; x < 1200; x += 40) {
+                for(let y = 0; y < 630; y += 40) {
+                    ctx.beginPath();
+                    ctx.arc(x + (Math.random() * 40), y + (Math.random() * 40), 1, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+            }
+            
+            // Logo circle
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(80, 80, 40, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Logo H
+            ctx.fillStyle = '#00856A';
+            ctx.font = 'bold 40px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('H', 80, 90);
+            
+            // Badge
+            ctx.fillStyle = 'rgba(255,255,255,0.2)';
+            ctx.fillRect(1060, 40, 100, 40);
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('MOCKUP', 1110, 65);
+            
+            // Main title
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 64px Arial';
+            ctx.textAlign = 'center';
+            ctx.shadowColor = 'rgba(0,0,0,0.3)';
+            ctx.shadowBlur = 4;
+            ctx.shadowOffsetY = 2;
+            ctx.fillText('하나 금융그룹 포털', 600, 250);
+            
+            // Subtitle
+            ctx.font = '32px Arial';
+            ctx.fillText('통합 관리 시스템', 600, 300);
+            
+            // Description
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetY = 0;
+            ctx.font = '24px Arial';
+            ctx.fillStyle = 'rgba(255,255,255,0.9)';
+            ctx.fillText('게시판, 보이스피싱 지킴이, 수신/여신/외환 업무를', 600, 360);
+            ctx.fillText('한눈에 관리할 수 있는 포털 시스템 목업', 600, 390);
+            
+            // Features
+            const features = [
+                {text: '📋 게시판 관리', x: 350},
+                {text: '🛡️ 보이스피싱 지킴이', x: 600},
+                {text: '🏦 금융업무 통합', x: 850}
+            ];
+            
+            ctx.fillStyle = 'rgba(255,255,255,0.1)';
+            features.forEach(feature => {
+                ctx.fillRect(feature.x - 80, 460, 160, 50);
+            });
+            
+            ctx.fillStyle = 'white';
+            ctx.font = '18px Arial';
+            features.forEach(feature => {
+                ctx.fillText(feature.text, feature.x, 490);
+            });
+        }
+        
+        function downloadImage() {
+            const canvas = document.getElementById('canvas');
+            const link = document.createElement('a');
+            link.download = 'og-image.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        // Auto generate on load
+        window.onload = function() {
+            generateImage();
+        }
+    </script>
+</body>
+</html>

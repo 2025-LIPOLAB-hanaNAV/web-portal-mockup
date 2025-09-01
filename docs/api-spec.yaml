@@ -1,0 +1,508 @@
+openapi: 3.0.3
+info:
+  title: 하나 금융그룹 포털 API
+  description: 하나 금융그룹 포털 시스템의 게시판 관련 API 명세서
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: api-support@hana.co.kr
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.hana-portal.co.kr/v1
+    description: Production server
+  - url: https://api-dev.hana-portal.co.kr/v1
+    description: Development server
+  - url: http://localhost:3001/api
+    description: Local development server
+
+paths:
+  /posts:
+    get:
+      summary: 게시글 목록 조회
+      description: 게시판의 게시글 목록을 조회합니다.
+      tags:
+        - Posts
+      parameters:
+        - name: board
+          in: query
+          description: 게시판 종류
+          required: false
+          schema:
+            type: string
+            enum: [notice, voice-phishing, financial-fraud, electronic-fraud, etc]
+            default: voice-phishing
+        - name: category
+          in: query
+          description: 게시글 카테고리
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: 페이지 번호 (1부터 시작)
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: 한 페이지당 게시글 수
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: search
+          in: query
+          description: 검색 키워드
+          required: false
+          schema:
+            type: string
+        - name: searchType
+          in: query
+          description: 검색 유형
+          required: false
+          schema:
+            type: string
+            enum: [title, content, author, all]
+            default: title
+      responses:
+        '200':
+          description: 성공적으로 게시글 목록을 조회했습니다.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      posts:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/PostSummary'
+                      pagination:
+                        $ref: '#/components/schemas/Pagination'
+                  message:
+                    type: string
+                    example: "게시글 목록을 성공적으로 조회했습니다."
+        '400':
+          description: 잘못된 요청 파라미터
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: 서버 내부 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /posts/{postId}:
+    get:
+      summary: 게시글 상세 조회
+      description: 특정 게시글의 상세 내용을 조회합니다.
+      tags:
+        - Posts
+      parameters:
+        - name: postId
+          in: path
+          description: 게시글 ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 성공적으로 게시글 상세 정보를 조회했습니다.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/PostDetail'
+                  message:
+                    type: string
+                    example: "게시글 상세 정보를 성공적으로 조회했습니다."
+        '404':
+          description: 게시글을 찾을 수 없습니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: 서버 내부 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /posts/{postId}/views:
+    patch:
+      summary: 게시글 조회수 증가
+      description: 게시글의 조회수를 1 증가시킵니다.
+      tags:
+        - Posts
+      parameters:
+        - name: postId
+          in: path
+          description: 게시글 ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 조회수가 성공적으로 증가했습니다.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      views:
+                        type: integer
+                        example: 529
+                  message:
+                    type: string
+                    example: "조회수가 증가했습니다."
+        '404':
+          description: 게시글을 찾을 수 없습니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /attachments/{attachmentId}/download:
+    get:
+      summary: 첨부파일 다운로드
+      description: 첨부파일을 다운로드합니다.
+      tags:
+        - Attachments
+      parameters:
+        - name: attachmentId
+          in: path
+          description: 첨부파일 ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 첨부파일 다운로드
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: 첨부파일을 찾을 수 없습니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: 다운로드 권한이 없습니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /boards:
+    get:
+      summary: 게시판 목록 조회
+      description: 사용 가능한 게시판 목록을 조회합니다.
+      tags:
+        - Boards
+      responses:
+        '200':
+          description: 성공적으로 게시판 목록을 조회했습니다.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Board'
+                  message:
+                    type: string
+                    example: "게시판 목록을 성공적으로 조회했습니다."
+
+components:
+  schemas:
+    PostSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 게시글 고유 ID
+          example: "0401r2jxl"
+        title:
+          type: string
+          description: 게시글 제목
+          example: "금융소비자보호부 담당 업무 안내"
+        department:
+          type: string
+          description: 작성 부서
+          example: "금융소비자보호부"
+        author:
+          type: string
+          description: 작성자
+          example: "홍길동"
+        views:
+          type: integer
+          description: 조회수
+          example: 528
+        postDate:
+          type: string
+          format: date
+          description: 게시일
+          example: "2025-07-24"
+        endDate:
+          type: string
+          format: date
+          description: 종료일
+          example: "2025-12-31"
+        category:
+          type: string
+          description: 게시글 카테고리
+          example: "기타"
+        badges:
+          type: array
+          items:
+            type: string
+            enum: [notice, emergency]
+          description: 게시글 배지
+          example: ["notice"]
+        hasAttachment:
+          type: boolean
+          description: 첨부파일 존재 여부
+          example: false
+        isUnread:
+          type: boolean
+          description: 읽지 않은 게시글 여부
+          example: true
+        isModified:
+          type: boolean
+          description: 수정된 게시글 여부
+          example: false
+        createdAt:
+          type: string
+          format: date-time
+          description: 생성일시
+          example: "2025-07-24T09:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: 수정일시
+          example: "2025-07-24T09:00:00Z"
+
+    PostDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 게시글 고유 ID
+          example: "0401r2jxl"
+        title:
+          type: string
+          description: 게시글 제목
+          example: "금융소비자보호부 담당 업무 안내"
+        department:
+          type: string
+          description: 작성 부서
+          example: "금융소비자보호부"
+        author:
+          type: string
+          description: 작성자
+          example: "홍길동"
+        views:
+          type: integer
+          description: 조회수
+          example: 528
+        postDate:
+          type: string
+          format: date
+          description: 게시일
+          example: "2025-07-24"
+        endDate:
+          type: string
+          format: date
+          description: 종료일
+          example: "2025-12-31"
+        category:
+          type: string
+          description: 게시글 카테고리
+          example: "기타"
+        badges:
+          type: array
+          items:
+            type: string
+            enum: [notice, emergency]
+          description: 게시글 배지
+          example: ["notice"]
+        content:
+          type: string
+          description: 게시글 내용 (HTML)
+          example: "<h3>금융소비자보호부 담당 업무 안내</h3><p>안녕하세요...</p>"
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+          description: 첨부파일 목록
+        createdAt:
+          type: string
+          format: date-time
+          description: 생성일시
+          example: "2025-07-24T09:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: 수정일시
+          example: "2025-07-24T09:00:00Z"
+
+    Attachment:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 첨부파일 ID
+          example: "1"
+        name:
+          type: string
+          description: 파일명
+          example: "금융소비자보호부_업무안내.pdf"
+        size:
+          type: string
+          description: 파일 크기
+          example: "2.3MB"
+        mimeType:
+          type: string
+          description: MIME 타입
+          example: "application/pdf"
+        downloadUrl:
+          type: string
+          description: 다운로드 URL
+          example: "/api/attachments/1/download"
+        uploadedAt:
+          type: string
+          format: date-time
+          description: 업로드일시
+          example: "2025-07-24T09:00:00Z"
+
+    Board:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 게시판 ID
+          example: "voice-phishing"
+        name:
+          type: string
+          description: 게시판 이름
+          example: "보이스피싱 지킴이"
+        description:
+          type: string
+          description: 게시판 설명
+          example: "보이스피싱 관련 정보와 사례를 공유하는 게시판입니다."
+        category:
+          type: string
+          description: 게시판 카테고리
+          example: "지킴이"
+        isActive:
+          type: boolean
+          description: 활성화 여부
+          example: true
+
+    Pagination:
+      type: object
+      properties:
+        currentPage:
+          type: integer
+          description: 현재 페이지
+          example: 1
+        totalPages:
+          type: integer
+          description: 전체 페이지 수
+          example: 5
+        totalItems:
+          type: integer
+          description: 전체 항목 수
+          example: 86
+        itemsPerPage:
+          type: integer
+          description: 페이지당 항목 수
+          example: 20
+        hasNextPage:
+          type: boolean
+          description: 다음 페이지 존재 여부
+          example: true
+        hasPreviousPage:
+          type: boolean
+          description: 이전 페이지 존재 여부
+          example: false
+
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: 에러 코드
+              example: "INVALID_PARAMETER"
+            message:
+              type: string
+              description: 에러 메시지
+              example: "잘못된 요청 파라미터입니다."
+            details:
+              type: string
+              description: 상세 에러 정보
+              example: "page 파라미터는 1 이상이어야 합니다."
+        timestamp:
+          type: string
+          format: date-time
+          description: 에러 발생 시간
+          example: "2025-01-23T13:01:47Z"
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT 토큰을 사용한 인증
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: Posts
+    description: 게시글 관련 API
+  - name: Attachments
+    description: 첨부파일 관련 API
+  - name: Boards
+    description: 게시판 관련 API

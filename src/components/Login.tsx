@@ -21,7 +21,7 @@ const Login = ({ onLogin }: LoginProps) => {
   return (
     <div className="login-container">
       <div className="login-form">
-        <h1>보이스피싱 지킴이</h1>
+        <h1>하나 금융그룹포탈 목업</h1>
         <h2>로그인</h2>
         
         <form onSubmit={handleSubmit}>

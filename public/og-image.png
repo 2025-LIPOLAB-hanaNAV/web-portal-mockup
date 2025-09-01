@@ -1,0 +1,48 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00856A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4a9b8a;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Pattern -->
+    <pattern id="dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="20" cy="20" r="1" fill="rgba(255,255,255,0.1)"/>
+    </pattern>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  <rect width="1200" height="630" fill="url(#dots)"/>
+  
+  <!-- Logo -->
+  <circle cx="80" cy="80" r="40" fill="white"/>
+  <text x="80" y="95" text-anchor="middle" fill="#00856A" font-family="Arial, sans-serif" font-size="40" font-weight="bold">H</text>
+  
+  <!-- Badge -->
+  <rect x="1060" y="40" width="100" height="40" fill="rgba(255,255,255,0.2)" rx="8"/>
+  <text x="1110" y="65" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="18" font-weight="bold">MOCKUP</text>
+  
+  <!-- Main content -->
+  <text x="600" y="250" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="64" font-weight="bold" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3))">하나 금융그룹 포털</text>
+  
+  <text x="600" y="300" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="32">통합 관리 시스템</text>
+  
+  <!-- Description -->
+  <text x="600" y="360" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-family="Arial, sans-serif" font-size="24">게시판, 보이스피싱 지킴이, 수신/여신/외환 업무를</text>
+  <text x="600" y="390" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-family="Arial, sans-serif" font-size="24">한눈에 관리할 수 있는 포털 시스템 목업</text>
+  
+  <!-- Feature boxes -->
+  <rect x="270" y="460" width="160" height="50" fill="rgba(255,255,255,0.1)" rx="8"/>
+  <rect x="520" y="460" width="160" height="50" fill="rgba(255,255,255,0.1)" rx="8"/>
+  <rect x="770" y="460" width="160" height="50" fill="rgba(255,255,255,0.1)" rx="8"/>
+  
+  <!-- Feature text -->
+  <text x="350" y="490" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="18" font-weight="500">📋 게시판 관리</text>
+  <text x="600" y="490" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="18" font-weight="500">🛡️ 보이스피싱 지킴이</text>
+  <text x="850" y="490" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="18" font-weight="500">🏦 금융업무 통합</text>
+  
+  <!-- Bottom text -->
+  <text x="600" y="580" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-family="Arial, sans-serif" font-size="16">LIPOLAB x Hana Financial Group</text>
+</svg>
