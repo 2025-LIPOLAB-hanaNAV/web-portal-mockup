@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import './PostDetail.css'
 
 interface PostDetailData {
@@ -20,18 +21,17 @@ interface PostDetailData {
   }[]
 }
 
-interface PostDetailProps {
-  postId: string
-  onBack: () => void
-}
-
-const PostDetail = ({ postId, onBack }: PostDetailProps) => {
+const PostDetail = () => {
+  const { boardType, postId } = useParams<{ boardType: string; postId: string }>()
+  const navigate = useNavigate()
   const [post, setPost] = useState<PostDetailData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchPostDetail(postId)
+    if (postId) {
+      fetchPostDetail(postId)
+    }
   }, [postId])
 
   const fetchPostDetail = async (id: string) => {
@@ -132,7 +132,7 @@ const PostDetail = ({ postId, onBack }: PostDetailProps) => {
         <div className="post-detail-error">
           <h3>오류가 발생했습니다</h3>
           <p>{error}</p>
-          <button onClick={onBack} className="btn-back">목록으로 돌아가기</button>
+          <button onClick={() => navigate(`/boards/${boardType}`)} className="btn-back">목록으로 돌아가기</button>
         </div>
       </main>
     )
@@ -144,7 +144,7 @@ const PostDetail = ({ postId, onBack }: PostDetailProps) => {
     <main className="main-content">
       <div className="post-detail-header">
         <div className="post-detail-nav">
-          <button onClick={onBack} className="btn-back">← 목록으로</button>
+          <button onClick={() => navigate(`/boards/${boardType}`)} className="btn-back">← 목록으로</button>
         </div>
         
         <div className="post-detail-info">
@@ -209,7 +209,7 @@ const PostDetail = ({ postId, onBack }: PostDetailProps) => {
       )}
 
       <div className="post-detail-actions">
-        <button onClick={onBack} className="btn-action">목록</button>
+        <button onClick={() => navigate(`/boards/${boardType}`)} className="btn-action">목록</button>
         <button className="btn-action">수정</button>
         <button className="btn-action">삭제</button>
         <button className="btn-action">인쇄</button>

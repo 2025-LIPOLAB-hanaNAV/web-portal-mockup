@@ -1,16 +1,38 @@
+import { useNavigate, useLocation } from 'react-router-dom'
 import './Sidebar.css'
 
 const Sidebar = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const handleNavigation = (path: string) => {
+    navigate(path)
+  }
+
+  const isActive = (path: string) => {
+    return location.pathname === path || location.pathname.startsWith(path + '/')
+  }
+
   return (
     <aside className="sidebar">
       <div className="sidebar-section">
         <div className="sidebar-title">전체 게시판</div>
-        <div className="sidebar-item">공지게시판</div>
+        <div 
+          className={`sidebar-item ${isActive('/boards/notice') ? 'active' : ''}`}
+          onClick={() => handleNavigation('/boards/notice')}
+        >
+          공지게시판
+        </div>
       </div>
       
       <div className="sidebar-section">
         <div className="sidebar-title">지킴이</div>
-        <div className="sidebar-item active">보이스피싱 지킴이</div>
+        <div 
+          className={`sidebar-item ${isActive('/boards/voice-phishing') ? 'active' : ''}`}
+          onClick={() => handleNavigation('/boards/voice-phishing')}
+        >
+          보이스피싱 지킴이
+        </div>
         <div className="sidebar-item">전기통신금융사기대응TF</div>
         <div className="sidebar-item">전기금융사기</div>
         <div className="sidebar-item">전자금융사고</div>
@@ -19,7 +41,12 @@ const Sidebar = () => {
       
       <div className="sidebar-section">
         <div className="sidebar-title">수신</div>
-        <div className="sidebar-item">예금상품관리</div>
+        <div 
+          className={`sidebar-item ${isActive('/boards/deposit') ? 'active' : ''}`}
+          onClick={() => handleNavigation('/boards/deposit')}
+        >
+          예금상품관리
+        </div>
         <div className="sidebar-item">이자관리</div>
         <div className="sidebar-item">고객관리</div>
         <div className="sidebar-item">영업점관리</div>
