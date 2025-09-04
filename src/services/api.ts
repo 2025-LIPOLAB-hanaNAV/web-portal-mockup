@@ -25,7 +25,7 @@ export interface ApiResponse<T> {
 	message?: string;
 }
 
-const API_BASE_URL = "http://localhost:3001/api";
+const API_BASE_URL = "http://localhost:8001/api";
 
 class ApiService {
 	private async request<T>(
@@ -61,20 +61,94 @@ class ApiService {
 	}
 
 	async getPosts(page = 1, limit = 20): Promise<ApiResponse<Post[]>> {
-		return this.request(`/posts?page=${page}&limit=${limit}`);
+		try {
+			console.log("Fetching posts from:", `${API_BASE_URL}/posts`);
+
+			const response = await fetch(`${API_BASE_URL}/posts`, {
+				method: "GET",
+				headers: {
+					Accept: "application/json",
+				},
+				cache: "no-cache",
+			});
+
+			console.log("Response status:", response.status);
+			console.log("Response headers:", response.headers.get("content-type"));
+
+			if (!response.ok) {
+				const errorText = await response.text();
+				console.error("Response error:", errorText);
+				throw new Error(
+					`HTTP error! status: ${response.status}, message: ${errorText}`
+				);
+			}
+
+			const contentType = response.headers.get("content-type");
+			if (!contentType || !contentType.includes("application/json")) {
+				const responseText = await response.text();
+				console.error("Non-JSON response:", responseText.substring(0, 200));
+				throw new Error(`Expected JSON response, got: ${contentType}`);
+			}
+
+			const data = await response.json();
+			console.log("Received data:", data);
+
+			// FastAPI 응답을 프론트엔드 형식으로 변환
+			const convertedPosts = data.map((post: any) => ({
+				id: post.id,
+				isUnread: true,
+				isModified: false,
+				category: post.category,
+				title: post.title,
+				department: post.department,
+				author: post.author,
+				views: post.views,
+				postDate: post.postDate,
+				endDate: post.endDate || "",
+				badges: post.badges as ("notice" | "emergency")[],
+				hasAttachment: post.attachments && post.attachments.length > 0,
+				content: post.content,
+			}));
+
+			return {
+				success: true,
+				data: convertedPosts,
+			};
+		} catch (error) {
+			console.error("API getPosts error:", error);
+			return {
+				success: false,
+				message: error instanceof Error ? error.message : "Unknown error",
+			};
+		}
 	}
 
 	async getPost(id: string): Promise<ApiResponse<Post>> {
 		return this.request(`/posts/${id}`);
 	}
 
-	async createPost(
-		post: Omit<Post, "id" | "views" | "postDate">
-	): Promise<ApiResponse<Post>> {
-		return this.request("/posts", {
-			method: "POST",
-			body: JSON.stringify(post),
-		});
+	async createPost(formData: FormData): Promise<ApiResponse<Post>> {
+		try {
+			const response = await fetch(`${API_BASE_URL}/posts`, {
+				method: "POST",
+				body: formData,
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const data = await response.json();
+			return {
+				success: true,
+				data: data,
+			};
+		} catch (error) {
+			return {
+				success: false,
+				message: error instanceof Error ? error.message : "Unknown error",
+			};
+		}
 	}
 
 	async updatePost(
