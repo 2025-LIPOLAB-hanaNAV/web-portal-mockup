@@ -1,25 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import './PostDetail.css'
-
-interface PostDetailData {
-  id: string
-  title: string
-  department: string
-  author: string
-  views: number
-  postDate: string
-  endDate: string
-  category: string
-  badges: ('notice' | 'emergency')[]
-  content: string
-  attachments: {
-    id: string
-    name: string
-    size: string
-    downloadUrl: string
-  }[]
-}
+import { getPostDetail, type PostDetailData } from '../services/mockPostService'
 
 const PostDetail = () => {
   const { boardType, postId } = useParams<{ boardType: string; postId: string }>()
@@ -38,68 +20,11 @@ const PostDetail = () => {
     try {
       setLoading(true)
       setError(null)
-      
-      // API 호출
-      const response = await fetch(`/api/posts/${id}`)
-      if (!response.ok) {
-        throw new Error('게시글을 불러오는데 실패했습니다.')
-      }
-      
-      const data = await response.json()
+      // 모의 API 호출 (JSON 수신 시뮬레이션)
+      const data = await getPostDetail(id)
       setPost(data)
     } catch (err) {
       setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.')
-      
-      // 개발 중에는 mock 데이터 사용
-      const mockData: PostDetailData = {
-        id: postId || 'unknown',
-        title: '금융소비자보호부 담당 업무 안내',
-        department: '금융소비자보호부',
-        author: '홍길동',
-        views: 528,
-        postDate: '2025-07-24',
-        endDate: '2025-12-31',
-        category: '기타',
-        badges: ['notice'],
-        content: `
-<h3>금융소비자보호부 담당 업무 안내</h3>
-
-<p>안녕하세요. 금융소비자보호부입니다.</p>
-
-<p>이번 공지를 통해 금융소비자보호부의 주요 담당 업무에 대해 안내드리고자 합니다.</p>
-
-<h4>주요 업무 내용</h4>
-<ul>
-  <li>금융소비자 권익 보호</li>
-  <li>금융상품 및 서비스 관련 분쟁 조정</li>
-  <li>금융교육 및 정보 제공</li>
-  <li>금융사기 예방 및 대응</li>
-</ul>
-
-<h4>문의 사항</h4>
-<p>관련 문의사항이 있으시면 금융소비자보호부로 연락 주시기 바랍니다.</p>
-<p>전화: 02-1234-5678<br>
-이메일: consumer@hana.co.kr</p>
-
-<p>감사합니다.</p>
-        `,
-        attachments: [
-          {
-            id: '1',
-            name: '금융소비자보호부_업무안내.pdf',
-            size: '2.3MB',
-            downloadUrl: '/api/attachments/1/download'
-          },
-          {
-            id: '2',
-            name: '관련_법령_안내.hwp',
-            size: '1.1MB',
-            downloadUrl: '/api/attachments/2/download'
-          }
-        ]
-      }
-      setPost(mockData)
-      setError(null)
     } finally {
       setLoading(false)
     }

@@ -1,0 +1,21 @@
+{
+  "id": "notice_002",
+  "title": "시스템 점검 안내 (1월 25일)",
+  "department": "IT운영팀",
+  "author": "이과장",
+  "views": 342,
+  "postDate": "2025-01-20",
+  "endDate": "2025-01-26",
+  "category": "공지",
+  "badges": ["notice", "emergency"],
+  "content": "<p>1월 25일 00:00~04:00 시스템 점검이 예정되어 있습니다.<\/p>",
+  "attachments": [
+    {
+      "id": "3",
+      "name": "점검_상세_안내.pdf",
+      "size": "540KB",
+      "downloadUrl": "/api/attachments/3/download"
+    }
+  ]
+}
+
