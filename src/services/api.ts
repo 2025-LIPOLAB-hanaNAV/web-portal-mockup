@@ -1,3 +1,10 @@
+export interface Attachment {
+	id: string;
+	name: string;
+	size: string;
+	downloadUrl: string;
+}
+
 export interface Post {
 	id: string;
 	isUnread: boolean;
@@ -12,6 +19,7 @@ export interface Post {
 	badges: ("notice" | "emergency")[];
 	hasAttachment: boolean;
 	content?: string;
+	attachments?: Attachment[];
 }
 
 export interface LoginCredentials {
@@ -25,7 +33,7 @@ export interface ApiResponse<T> {
 	message?: string;
 }
 
-const API_BASE_URL = "http://localhost:8001/api";
+const API_BASE_URL = "http://localhost:8003/api";
 
 class ApiService {
 	private async request<T>(
@@ -108,6 +116,7 @@ class ApiService {
 				badges: post.badges as ("notice" | "emergency")[],
 				hasAttachment: post.attachments && post.attachments.length > 0,
 				content: post.content,
+				attachments: post.attachments || [],
 			}));
 
 			return {
@@ -124,7 +133,49 @@ class ApiService {
 	}
 
 	async getPost(id: string): Promise<ApiResponse<Post>> {
-		return this.request(`/posts/${id}`);
+		try {
+			const response = await fetch(`${API_BASE_URL}/posts/${id}`, {
+				method: "GET",
+				headers: {
+					Accept: "application/json",
+				},
+				cache: "no-cache",
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const post = await response.json();
+
+			// FastAPI 응답을 프론트엔드 형식으로 변환
+			const convertedPost = {
+				id: post.id,
+				isUnread: true,
+				isModified: false,
+				category: post.category,
+				title: post.title,
+				department: post.department,
+				author: post.author,
+				views: post.views,
+				postDate: post.postDate,
+				endDate: post.endDate || "",
+				badges: post.badges as ("notice" | "emergency")[],
+				hasAttachment: post.attachments && post.attachments.length > 0,
+				content: post.content,
+				attachments: post.attachments || [],
+			};
+
+			return {
+				success: true,
+				data: convertedPost,
+			};
+		} catch (error) {
+			return {
+				success: false,
+				message: error instanceof Error ? error.message : "Unknown error",
+			};
+		}
 	}
 
 	async createPost(formData: FormData): Promise<ApiResponse<Post>> {

@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import './PostDetail.css'
-import { getPostDetail, type PostDetailData } from '../services/mockPostService'
+import { apiService, type Post, type Attachment } from '../services/api'
 
 const PostDetail = () => {
   const { boardType, postId } = useParams<{ boardType: string; postId: string }>()
   const navigate = useNavigate()
-  const [post, setPost] = useState<PostDetailData | null>(null)
+  const [post, setPost] = useState<Post | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -20,9 +20,13 @@ const PostDetail = () => {
     try {
       setLoading(true)
       setError(null)
-      // 모의 API 호출 (JSON 수신 시뮬레이션)
-      const data = await getPostDetail(id)
-      setPost(data)
+      // FastAPI 백엔드 호출
+      const response = await apiService.getPost(id)
+      if (response.success && response.data) {
+        setPost(response.data)
+      } else {
+        throw new Error(response.message || '게시글을 불러오는데 실패했습니다.')
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.')
     } finally {
@@ -30,10 +34,10 @@ const PostDetail = () => {
     }
   }
 
-  const handleDownload = (attachment: PostDetailData['attachments'][0]) => {
+  const handleDownload = (attachment: Attachment) => {
     // 첨부파일 다운로드
     const link = document.createElement('a')
-    link.href = attachment.downloadUrl
+    link.href = `http://localhost:8003${attachment.downloadUrl}`
     link.download = attachment.name
     document.body.appendChild(link)
     link.click()
@@ -107,10 +111,10 @@ const PostDetail = () => {
       </div>
 
       <div className="post-detail-content">
-        <div className="post-content" dangerouslySetInnerHTML={{ __html: post.content }} />
+        <div className="post-content" dangerouslySetInnerHTML={{ __html: post.content || '' }} />
       </div>
 
-      {post.attachments.length > 0 && (
+      {post.attachments && post.attachments.length > 0 && (
         <div className="post-attachments">
           <h3 className="attachments-title">첨부파일</h3>
           <div className="attachments-list">
