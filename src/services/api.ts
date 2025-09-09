@@ -3,6 +3,7 @@ export interface Attachment {
 	name: string;
 	size: string;
 	downloadUrl: string;
+	original_filename?: string;
 }
 
 export interface UploadedImage {

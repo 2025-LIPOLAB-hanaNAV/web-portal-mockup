@@ -38,17 +38,30 @@ const PostDetail = () => {
     // 첨부파일 다운로드
     const link = document.createElement('a')
     link.href = `http://localhost:8002${attachment.downloadUrl}`
-    link.download = attachment.name
+    // original_filename이 있으면 사용, 없으면 name 사용
+    link.download = attachment.original_filename || attachment.name
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
   }
 
-  // 이미지 경로를 절대 URL로 변환하는 함수
+  // 이미지 경로를 절대 URL로 변환하고 개행문자를 처리하는 함수
   const processContentImages = (content: string): string => {
     if (!content) return ''
+    
+    // 개행문자 처리: \n, \r, \t를 HTML로 변환
+    let processedContent = content
+      .replace(/\\n/g, '<br>')
+      .replace(/\\r\\n/g, '<br>')
+      .replace(/\\r/g, '<br>')
+      .replace(/\\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
+      .replace(/\n/g, '<br>')
+      .replace(/\r\n/g, '<br>')
+      .replace(/\r/g, '<br>')
+      .replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
+    
     // /static/images/ 경로를 완전한 URL로 변환
-    return content.replace(
+    return processedContent.replace(
       /src="\/static\/images\//g,
       'src="http://localhost:8002/static/images/'
     )
@@ -128,7 +141,7 @@ const PostDetail = () => {
               <div key={attachment.id} className="attachment-item">
                 <div className="attachment-info">
                   <span className="attachment-icon">📎</span>
-                  <span className="attachment-name">{attachment.name}</span>
+                  <span className="attachment-name">{attachment.original_filename || attachment.name}</span>
                   <span className="attachment-size">({attachment.size})</span>
                 </div>
                 <button 
