@@ -5,6 +5,13 @@ export interface Attachment {
 	downloadUrl: string;
 }
 
+export interface UploadedImage {
+	id: string;
+	filename: string;
+	url: string;
+	original_filename?: string;
+}
+
 export interface Post {
 	id: string;
 	isUnread: boolean;
@@ -20,6 +27,7 @@ export interface Post {
 	hasAttachment: boolean;
 	content?: string;
 	attachments?: Attachment[];
+	uploaded_images?: UploadedImage[];
 }
 
 export interface LoginCredentials {
@@ -33,7 +41,7 @@ export interface ApiResponse<T> {
 	message?: string;
 }
 
-const API_BASE_URL = "http://localhost:8003/api";
+const API_BASE_URL = "http://localhost:8002/api";
 
 class ApiService {
 	private async request<T>(
@@ -117,6 +125,7 @@ class ApiService {
 				hasAttachment: post.attachments && post.attachments.length > 0,
 				content: post.content,
 				attachments: post.attachments || [],
+				uploaded_images: post.uploaded_images || [],
 			}));
 
 			return {
@@ -164,6 +173,7 @@ class ApiService {
 				hasAttachment: post.attachments && post.attachments.length > 0,
 				content: post.content,
 				attachments: post.attachments || [],
+				uploaded_images: post.uploaded_images || [],
 			};
 
 			return {

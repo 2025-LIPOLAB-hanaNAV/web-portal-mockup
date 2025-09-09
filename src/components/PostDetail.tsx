@@ -37,11 +37,21 @@ const PostDetail = () => {
   const handleDownload = (attachment: Attachment) => {
     // 첨부파일 다운로드
     const link = document.createElement('a')
-    link.href = `http://localhost:8003${attachment.downloadUrl}`
+    link.href = `http://localhost:8002${attachment.downloadUrl}`
     link.download = attachment.name
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
+  }
+
+  // 이미지 경로를 절대 URL로 변환하는 함수
+  const processContentImages = (content: string): string => {
+    if (!content) return ''
+    // /static/images/ 경로를 완전한 URL로 변환
+    return content.replace(
+      /src="\/static\/images\//g,
+      'src="http://localhost:8002/static/images/'
+    )
   }
 
   if (loading) {
@@ -110,12 +120,8 @@ const PostDetail = () => {
         </div>
       </div>
 
-      <div className="post-detail-content">
-        <div className="post-content" dangerouslySetInnerHTML={{ __html: post.content || '' }} />
-      </div>
-
       {post.attachments && post.attachments.length > 0 && (
-        <div className="post-attachments">
+        <div className="post-attachments-header">
           <h3 className="attachments-title">첨부파일</h3>
           <div className="attachments-list">
             {post.attachments.map((attachment) => (
@@ -136,6 +142,11 @@ const PostDetail = () => {
           </div>
         </div>
       )}
+
+      <div className="post-detail-content">
+        <div className="post-content" dangerouslySetInnerHTML={{ __html: processContentImages(post.content || '') }} />
+      </div>
+
 
       <div className="post-detail-actions">
         <button onClick={() => navigate(`/boards/${boardType}`)} className="btn-action">목록</button>
