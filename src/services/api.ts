@@ -3,6 +3,14 @@ export interface Attachment {
 	name: string;
 	size: string;
 	downloadUrl: string;
+	original_filename?: string;
+}
+
+export interface UploadedImage {
+	id: string;
+	filename: string;
+	url: string;
+	original_filename?: string;
 }
 
 export interface Post {
@@ -20,6 +28,7 @@ export interface Post {
 	hasAttachment: boolean;
 	content?: string;
 	attachments?: Attachment[];
+	uploaded_images?: UploadedImage[];
 }
 
 export interface LoginCredentials {
@@ -117,6 +126,7 @@ class ApiService {
 				hasAttachment: post.attachments && post.attachments.length > 0,
 				content: post.content,
 				attachments: post.attachments || [],
+				uploaded_images: post.uploaded_images || [],
 			}));
 
 			return {
@@ -164,6 +174,7 @@ class ApiService {
 				hasAttachment: post.attachments && post.attachments.length > 0,
 				content: post.content,
 				attachments: post.attachments || [],
+				uploaded_images: post.uploaded_images || [],
 			};
 
 			return {

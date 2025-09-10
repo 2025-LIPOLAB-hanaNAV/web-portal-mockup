@@ -26,89 +26,12 @@ const VoicePhishingBoard = () => {
 
   useEffect(() => {
     const loadPosts = async () => {
-      // 기존 하드코딩 데이터
-      const samplePosts: Post[] = [
-        {
-          id: '0401r2jxl',
-          isUnread: true,
-          isModified: false,
-          category: '기타',
-          title: '금융소비자보호부 담당 업무 안내',
-          department: '금융소비자보호부',
-          author: '홍길동',
-          views: 528,
-          postDate: '2025-07-24',
-          endDate: '2025-12-31',
-          badges: ['notice'],
-          hasAttachment: false
-        },
-        {
-          id: '0001r24yt',
-          isUnread: true,
-          isModified: true,
-          category: '기타',
-          title: '★문진제도 개선 시행 안내 및 Q&A',
-          department: '금융소비자보호부',
-          author: '장금이',
-          views: 1002,
-          postDate: '2025-07-07',
-          endDate: '2027-12-31',
-          badges: ['notice', 'emergency'],
-          hasAttachment: true
-        },
-        {
-          id: '0401r1qzr',
-          isUnread: true,
-          isModified: true,
-          category: '기타',
-          title: '입출금 계좌 신규시 금융거래한도계좌 신규 선택 항목 추가 안내',
-          department: '금융소비자보호부',
-          author: '장금이',
-          views: 698,
-          postDate: '2025-06-19',
-          endDate: '2025-06-19',
-          badges: ['notice'],
-          hasAttachment: false
-        },
-        {
-          id: '0401r2abc',
-          isUnread: true,
-          isModified: false,
-          category: '기타',
-          title: '법인·개인사업자 신규 계좌 개설시 유의 사항 안내',
-          department: '금융소비자보호부',
-          author: '김철수',
-          views: 1015,
-          postDate: '2025-06-13',
-          endDate: '2025-06-13',
-          badges: ['notice'],
-          hasAttachment: false
-        },
-        {
-          id: '0401r3def',
-          isUnread: false,
-          isModified: false,
-          category: '전기통신사기',
-          title: '「투자자의 유형별 통신사기범죄 대응 방안 가이드」',
-          department: '금융소비자보호부',
-          author: '김철수',
-          views: 660,
-          postDate: '2025-05-09',
-          endDate: '2026-05-09',
-          badges: ['notice'],
-          hasAttachment: false
-        }
-      ]
-
       try {
         // API에서 게시물 가져오기
         const result = await apiService.getPosts()
         if (result.success && result.data) {
-          // 모든 게시물을 합치고 정렬
-          const allPosts = [...samplePosts, ...result.data]
-          
           // 공지는 상단 고정, 일반 게시물은 날짜순 정렬
-          const sortedPosts = allPosts.sort((a, b) => {
+          const sortedPosts = result.data.sort((a, b) => {
             // 공지 배지가 있는 게시물을 상단에
             const aHasNotice = a.badges.includes('notice')
             const bHasNotice = b.badges.includes('notice')
@@ -122,30 +45,12 @@ const VoicePhishingBoard = () => {
           
           setPosts(sortedPosts)
         } else {
-          // API 실패시 하드코딩 데이터만 사용 (정렬 적용)
-          const sortedSamplePosts = samplePosts.sort((a, b) => {
-            const aHasNotice = a.badges.includes('notice')
-            const bHasNotice = b.badges.includes('notice')
-            
-            if (aHasNotice && !bHasNotice) return -1
-            if (!aHasNotice && bHasNotice) return 1
-            
-            return new Date(b.postDate).getTime() - new Date(a.postDate).getTime()
-          })
-          setPosts(sortedSamplePosts)
+          console.error('API 호출 실패:', result.message)
+          setPosts([])
         }
       } catch (error) {
         console.error('게시물 로딩 실패:', error)
-        const sortedSamplePosts = samplePosts.sort((a, b) => {
-          const aHasNotice = a.badges.includes('notice')
-          const bHasNotice = b.badges.includes('notice')
-          
-          if (aHasNotice && !bHasNotice) return -1
-          if (!aHasNotice && bHasNotice) return 1
-          
-          return new Date(b.postDate).getTime() - new Date(a.postDate).getTime()
-        })
-        setPosts(sortedSamplePosts)
+        setPosts([])
       }
     }
 

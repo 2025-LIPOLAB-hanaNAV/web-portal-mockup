@@ -37,11 +37,34 @@ const PostDetail = () => {
   const handleDownload = (attachment: Attachment) => {
     // 첨부파일 다운로드
     const link = document.createElement('a')
-    link.href = `http://localhost:8003${attachment.downloadUrl}`
-    link.download = attachment.name
+    link.href = `http://localhost:8002${attachment.downloadUrl}`
+    // original_filename이 있으면 사용, 없으면 name 사용
+    link.download = attachment.original_filename || attachment.name
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
+  }
+
+  // 이미지 경로를 절대 URL로 변환하고 개행문자를 처리하는 함수
+  const processContentImages = (content: string): string => {
+    if (!content) return ''
+    
+    // 개행문자 처리: \n, \r, \t를 HTML로 변환
+    let processedContent = content
+      .replace(/\\n/g, '<br>')
+      .replace(/\\r\\n/g, '<br>')
+      .replace(/\\r/g, '<br>')
+      .replace(/\\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
+      .replace(/\n/g, '<br>')
+      .replace(/\r\n/g, '<br>')
+      .replace(/\r/g, '<br>')
+      .replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')
+    
+    // /static/images/ 경로를 완전한 URL로 변환
+    return processedContent.replace(
+      /src="\/static\/images\//g,
+      'src="http://localhost:8002/static/images/'
+    )
   }
 
   if (loading) {
@@ -110,19 +133,15 @@ const PostDetail = () => {
         </div>
       </div>
 
-      <div className="post-detail-content">
-        <div className="post-content" dangerouslySetInnerHTML={{ __html: post.content || '' }} />
-      </div>
-
       {post.attachments && post.attachments.length > 0 && (
-        <div className="post-attachments">
+        <div className="post-attachments-header">
           <h3 className="attachments-title">첨부파일</h3>
           <div className="attachments-list">
             {post.attachments.map((attachment) => (
               <div key={attachment.id} className="attachment-item">
                 <div className="attachment-info">
                   <span className="attachment-icon">📎</span>
-                  <span className="attachment-name">{attachment.name}</span>
+                  <span className="attachment-name">{attachment.original_filename || attachment.name}</span>
                   <span className="attachment-size">({attachment.size})</span>
                 </div>
                 <button 
@@ -136,6 +155,11 @@ const PostDetail = () => {
           </div>
         </div>
       )}
+
+      <div className="post-detail-content">
+        <div className="post-content" dangerouslySetInnerHTML={{ __html: processContentImages(post.content || '') }} />
+      </div>
+
 
       <div className="post-detail-actions">
         <button onClick={() => navigate(`/boards/${boardType}`)} className="btn-action">목록</button>

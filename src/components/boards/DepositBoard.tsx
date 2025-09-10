@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { apiService } from '../../services/api'
+import WritePostModal from '../WritePostModal'
 import '../BulletinBoard.css'
 
 interface Post {
@@ -20,43 +22,66 @@ interface Post {
 const DepositBoard = () => {
   const navigate = useNavigate()
   const [posts, setPosts] = useState<Post[]>([])
+  const [isWriteModalOpen, setIsWriteModalOpen] = useState(false)
 
   useEffect(() => {
-    const samplePosts: Post[] = [
-      {
-        id: 'deposit_001',
-        isUnread: true,
-        isModified: false,
-        category: '예금상품',
-        title: '2025년 신규 정기예금 상품 출시 안내',
-        department: '수신상품팀',
-        author: '박대리',
-        views: 245,
-        postDate: '2025-01-15',
-        endDate: '2025-12-31',
-        badges: ['notice'],
-        hasAttachment: true
-      },
-      {
-        id: 'deposit_002',
-        isUnread: false,
-        isModified: false,
-        category: '금리정책',
-        title: '기준금리 변동에 따른 예금금리 조정',
-        department: '수신상품팀',
-        author: '최과장',
-        views: 432,
-        postDate: '2025-01-10',
-        endDate: '2025-03-31',
-        badges: ['notice'],
-        hasAttachment: false
+    const loadPosts = async () => {
+      try {
+        // API에서 게시물 가져오기
+        const result = await apiService.getPosts()
+        
+        if (result.success && result.data) {
+          // 날짜순 정렬 (최신순)
+          const sortedPosts = result.data.sort((a, b) => {
+            return new Date(b.postDate).getTime() - new Date(a.postDate).getTime()
+          })
+          
+          setPosts(sortedPosts)
+        } else {
+          console.error('API 호출 실패:', result.message)
+          setPosts([])
+        }
+      } catch (error) {
+        console.error('게시물 로딩 실패:', error)
+        setPosts([])
       }
-    ]
-    setPosts(samplePosts)
+    }
+
+    loadPosts()
   }, [])
 
   const handlePostClick = (postId: string) => {
     navigate(`/boards/deposit/posts/${postId}`)
+  }
+
+  const handleWritePost = async (formData: FormData) => {
+    try {
+      const result = await apiService.createPost(formData)
+      if (result.success && result.data) {
+        // 새 게시물을 목록에 추가
+        const newPost: Post = {
+          id: result.data.id,
+          isUnread: true,
+          isModified: false,
+          category: result.data.category,
+          title: result.data.title,
+          department: result.data.department,
+          author: result.data.author,
+          views: result.data.views,
+          postDate: result.data.postDate,
+          endDate: result.data.endDate || '',
+          badges: result.data.badges as ('notice' | 'emergency')[],
+          hasAttachment: result.data.attachments && result.data.attachments.length > 0
+        }
+        setPosts(prev => [newPost, ...prev])
+        alert('게시물이 성공적으로 작성되었습니다!')
+      } else {
+        throw new Error(result.message || '게시물 작성에 실패했습니다.')
+      }
+    } catch (error) {
+      console.error('게시물 작성 실패:', error)
+      throw error
+    }
   }
 
   return (
@@ -73,7 +98,7 @@ const DepositBoard = () => {
 
       <div className="board-controls">
         <div className="board-actions">
-          <button className="btn-action">글쓰기</button>
+          <button className="btn-action" onClick={() => setIsWriteModalOpen(true)}>글쓰기</button>
           <button className="btn-action">답글</button>
           <button className="btn-action">삭제</button>
           <button className="btn-action">전체</button>
@@ -160,6 +185,12 @@ const DepositBoard = () => {
       <div className="pagination">
         <span className="page-info">1 / 1</span>
       </div>
+
+      <WritePostModal
+        isOpen={isWriteModalOpen}
+        onClose={() => setIsWriteModalOpen(false)}
+        onSubmit={handleWritePost}
+      />
     </main>
   )
 }

@@ -26,52 +26,13 @@ const NoticeBoard = () => {
 
   useEffect(() => {
     const loadPosts = async () => {
-      // 기존 하드코딩 데이터
-      const samplePosts: Post[] = [
-        {
-          id: 'notice_001',
-          isUnread: false,
-          isModified: false,
-          category: '공지',
-          title: '2025년 신년 인사',
-          department: '경영진',
-          author: '김회장',
-          views: 1523,
-          postDate: '2025-01-01',
-          endDate: '2025-12-31',
-          badges: ['notice'],
-          hasAttachment: false
-        },
-        {
-          id: 'notice_002',
-          isUnread: true,
-          isModified: false,
-          category: '공지',
-          title: '시스템 점검 안내 (1월 25일)',
-          department: 'IT운영팀',
-          author: '이과장',
-          views: 342,
-          postDate: '2025-01-20',
-          endDate: '2025-01-26',
-          badges: ['notice', 'emergency'],
-          hasAttachment: true
-        }
-      ]
-
       try {
         // API에서 게시물 가져오기
-        console.log('Loading posts... samplePosts:', samplePosts.length)
         const result = await apiService.getPosts()
-        console.log('API result:', result)
         
         if (result.success && result.data) {
-          console.log('API data received:', result.data.length, 'posts')
-          // 모든 게시물을 합치고 정렬
-          const allPosts = [...samplePosts, ...result.data]
-          console.log('All posts combined:', allPosts.length)
-          
           // 공지는 상단 고정, 일반 게시물은 날짜순 정렬
-          const sortedPosts = allPosts.sort((a, b) => {
+          const sortedPosts = result.data.sort((a, b) => {
             // 공지 배지가 있는 게시물을 상단에
             const aHasNotice = a.badges.includes('notice')
             const bHasNotice = b.badges.includes('notice')
@@ -83,34 +44,14 @@ const NoticeBoard = () => {
             return new Date(b.postDate).getTime() - new Date(a.postDate).getTime()
           })
           
-          console.log('Final sorted posts:', sortedPosts.length)
           setPosts(sortedPosts)
         } else {
-          console.log('API failed, using sample posts only')
-          // API 실패시 하드코딩 데이터만 사용 (정렬 적용)
-          const sortedSamplePosts = samplePosts.sort((a, b) => {
-            const aHasNotice = a.badges.includes('notice')
-            const bHasNotice = b.badges.includes('notice')
-            
-            if (aHasNotice && !bHasNotice) return -1
-            if (!aHasNotice && bHasNotice) return 1
-            
-            return new Date(b.postDate).getTime() - new Date(a.postDate).getTime()
-          })
-          setPosts(sortedSamplePosts)
+          console.error('API 호출 실패:', result.message)
+          setPosts([])
         }
       } catch (error) {
         console.error('게시물 로딩 실패:', error)
-        const sortedSamplePosts = samplePosts.sort((a, b) => {
-          const aHasNotice = a.badges.includes('notice')
-          const bHasNotice = b.badges.includes('notice')
-          
-          if (aHasNotice && !bHasNotice) return -1
-          if (!aHasNotice && bHasNotice) return 1
-          
-          return new Date(b.postDate).getTime() - new Date(a.postDate).getTime()
-        })
-        setPosts(sortedSamplePosts)
+        setPosts([])
       }
     }
 
