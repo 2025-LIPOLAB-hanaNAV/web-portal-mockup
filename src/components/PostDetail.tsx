@@ -37,7 +37,7 @@ const PostDetail = () => {
   const handleDownload = (attachment: Attachment) => {
     // 첨부파일 다운로드
     const link = document.createElement('a')
-    link.href = `http://localhost:8002${attachment.downloadUrl}`
+    link.href = `http://localhost:3001${attachment.downloadUrl}`
     // original_filename이 있으면 사용, 없으면 name 사용
     link.download = attachment.original_filename || attachment.name
     document.body.appendChild(link)
@@ -63,7 +63,7 @@ const PostDetail = () => {
     // /static/images/ 경로를 완전한 URL로 변환
     return processedContent.replace(
       /src="\/static\/images\//g,
-      'src="http://localhost:8002/static/images/'
+      'src="http://localhost:3001/static/images/'
     )
   }
 

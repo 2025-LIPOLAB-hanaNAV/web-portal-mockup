@@ -1,0 +1,208 @@
+.landing-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: 'Malgun Gothic', sans-serif;
+}
+
+.landing-container {
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+}
+
+.navi-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+  gap: 16px;
+}
+
+.logo-icon {
+  width: 50px;
+  height: 50px;
+  background: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+}
+
+.logo-svg {
+  width: 32px;
+  height: 32px;
+}
+
+.logo-text h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+  color: #8B5CF6;
+  text-align: left;
+}
+
+.logo-text p {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: #6B7280;
+  text-align: left;
+}
+
+.welcome-section {
+  margin-bottom: 50px;
+}
+
+.welcome-section h2 {
+  font-size: 36px;
+  font-weight: bold;
+  color: #1F2937;
+  margin: 0 0 16px 0;
+}
+
+.welcome-section p {
+  font-size: 16px;
+  color: #6B7280;
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+.navigation-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.nav-card {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #8B5CF6, #A855F7);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nav-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  border-color: #8B5CF6;
+}
+
+.nav-card:hover::before {
+  opacity: 1;
+}
+
+.portal-card {
+  background: linear-gradient(135deg, #fafafa 0%, #f3f4f6 100%);
+}
+
+.chatbot-card {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.card-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 20px;
+  background: #8B5CF6;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.card-svg {
+  width: 28px;
+  height: 28px;
+}
+
+.nav-card h3 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1F2937;
+  margin: 0 0 12px 0;
+}
+
+.nav-card p {
+  font-size: 14px;
+  color: #6B7280;
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+.card-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #E5E7EB;
+}
+
+.port-info {
+  display: inline-block;
+  background: #8B5CF6;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.footer-info {
+  margin-top: 40px;
+}
+
+.footer-info p {
+  font-size: 14px;
+  color: #8B5CF6;
+  font-weight: 600;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .landing-page {
+    padding: 16px;
+  }
+
+  .navi-logo {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .logo-text h1,
+  .logo-text p {
+    text-align: center;
+  }
+
+  .welcome-section h2 {
+    font-size: 28px;
+  }
+
+  .navigation-cards {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .nav-card {
+    padding: 24px;
+  }
+}

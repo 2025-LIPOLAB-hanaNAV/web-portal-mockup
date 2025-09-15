@@ -42,7 +42,7 @@ export interface ApiResponse<T> {
 	message?: string;
 }
 
-const API_BASE_URL = "http://localhost:8003/api";
+const API_BASE_URL = "http://localhost:3001/api";
 
 class ApiService {
 	private async request<T>(

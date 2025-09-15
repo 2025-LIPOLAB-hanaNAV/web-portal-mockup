@@ -51,7 +51,7 @@ const DepositBoard = () => {
   }, [])
 
   const handlePostClick = (postId: string) => {
-    navigate(`/boards/deposit/posts/${postId}`)
+    navigate(`posts/${postId}`)
   }
 
   const handleWritePost = async (formData: FormData) => {
