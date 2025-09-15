@@ -58,7 +58,7 @@ const VoicePhishingBoard = () => {
   }, [])
 
   const handlePostClick = (postId: string) => {
-    navigate(`/boards/voice-phishing/posts/${postId}`)
+    navigate(`posts/${postId}`)
   }
 
   const handleWritePost = async (formData: FormData) => {

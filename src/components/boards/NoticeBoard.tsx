@@ -59,7 +59,7 @@ const NoticeBoard = () => {
   }, [])
 
   const handlePostClick = (postId: string) => {
-    navigate(`/boards/notice/posts/${postId}`)
+    navigate(`posts/${postId}`)
   }
 
   const handleWritePost = async (formData: FormData) => {
