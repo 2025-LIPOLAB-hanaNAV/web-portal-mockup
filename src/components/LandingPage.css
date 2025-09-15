@@ -1,17 +1,101 @@
 .landing-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 30%, #06b6d4 70%, #67e8f9 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
   font-family: 'Malgun Gothic', sans-serif;
+  position: relative;
+  overflow: hidden;
 }
 
 .landing-container {
   max-width: 800px;
   width: 100%;
   text-align: center;
+  position: relative;
+  z-index: 10;
+  transition: transform 0.1s ease-out;
+}
+
+/* 바다 배경 애니메이션 */
+.ocean-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 100px;
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.1) 0%,
+    rgba(255,255,255,0.3) 50%,
+    rgba(255,255,255,0.1) 100%);
+  border-radius: 50% 50% 0 0;
+  animation: wave-animation 3s ease-in-out infinite;
+}
+
+.wave1 {
+  animation-delay: 0s;
+  opacity: 0.7;
+}
+
+.wave2 {
+  animation-delay: 1s;
+  opacity: 0.5;
+  height: 80px;
+}
+
+.wave3 {
+  animation-delay: 2s;
+  opacity: 0.3;
+  height: 60px;
+}
+
+@keyframes wave-animation {
+  0%, 100% {
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    transform: translateX(-50%) scale(1.1);
+  }
+}
+
+/* 별자리 배경 */
+.stars-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+}
+
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle 2s infinite;
+}
+
+.star-1 { width: 2px; height: 2px; top: 10%; left: 10%; animation-delay: 0s; }
+.star-2 { width: 1px; height: 1px; top: 20%; left: 80%; animation-delay: 0.5s; }
+.star-3 { width: 3px; height: 3px; top: 15%; left: 60%; animation-delay: 1s; }
+.star-4 { width: 1px; height: 1px; top: 30%; left: 20%; animation-delay: 1.5s; }
+.star-5 { width: 2px; height: 2px; top: 25%; left: 90%; animation-delay: 2s; }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
 }
 
 .navi-logo {
@@ -19,6 +103,12 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 40px;
+  border-radius: 15px;
+  padding: 16px 24px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   gap: 16px;
 }
 
@@ -26,11 +116,31 @@
   width: 50px;
   height: 50px;
   background: white;
-  border-radius: 12px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+  position: relative;
+}
+
+.compass {
+  animation: compass-rotate 20s linear infinite;
+}
+
+@keyframes compass-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.compass-needle {
+  transform-origin: 20px 20px;
+  animation: needle-sway 3s ease-in-out infinite alternate;
+}
+
+@keyframes needle-sway {
+  from { transform: rotate(-5deg); }
+  to { transform: rotate(5deg); }
 }
 
 .logo-svg {
@@ -42,15 +152,17 @@
   margin: 0;
   font-size: 28px;
   font-weight: bold;
-  color: #8B5CF6;
+  color: #1e40af;
   text-align: left;
+  text-shadow: none;
 }
 
 .logo-text p {
   margin: 4px 0 0 0;
   font-size: 14px;
-  color: #6B7280;
+  color: #475569;
   text-align: left;
+  font-weight: 500;
 }
 
 .welcome-section {
@@ -60,15 +172,40 @@
 .welcome-section h2 {
   font-size: 36px;
   font-weight: bold;
-  color: #1F2937;
+  color: white;
   margin: 0 0 16px 0;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.nautical-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.anchor-icon {
+  font-size: 24px;
+  animation: anchor-sway 2s ease-in-out infinite alternate;
+}
+
+@keyframes anchor-sway {
+  from { transform: rotate(-10deg); }
+  to { transform: rotate(10deg); }
+}
+
+.ship-message, .journey-message {
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  font-size: 16px;
 }
 
 .welcome-section p {
   font-size: 16px;
-  color: #6B7280;
+  color: rgba(255, 255, 255, 0.9);
   margin: 8px 0;
   line-height: 1.6;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
 .navigation-cards {
@@ -79,15 +216,57 @@
 }
 
 .nav-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 16px;
   padding: 32px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border: 2px solid transparent;
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.sailing-card {
+  position: relative;
+}
+
+.sailing-waves {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  padding: 0 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mini-wave {
+  flex: 1;
+  height: 8px;
+  background: linear-gradient(45deg, #3b82f6, #06b6d4);
+  border-radius: 4px 4px 0 0;
+  animation: mini-wave-dance 1.5s ease-in-out infinite;
+}
+
+.mini-wave:nth-child(2) {
+  animation-delay: 0.3s;
+  height: 12px;
+}
+
+.mini-wave:nth-child(3) {
+  animation-delay: 0.6s;
+  height: 6px;
+}
+
+@keyframes mini-wave-dance {
+  0%, 100% { transform: scaleY(0.5); }
+  50% { transform: scaleY(1); }
 }
 
 .nav-card::before {
@@ -103,9 +282,22 @@
 }
 
 .nav-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-  border-color: #8B5CF6;
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  border-color: #3b82f6;
+}
+
+.nav-card:hover .sailing-waves {
+  opacity: 1;
+}
+
+.nav-card:hover .card-icon {
+  animation: card-float 2s ease-in-out infinite;
+}
+
+@keyframes card-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
 }
 
 .nav-card:hover::before {
@@ -113,23 +305,42 @@
 }
 
 .portal-card {
-  background: linear-gradient(135deg, #fafafa 0%, #f3f4f6 100%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.95) 100%);
 }
 
 .chatbot-card {
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(241,245,249,0.95) 100%);
 }
 
 .card-icon {
   width: 60px;
   height: 60px;
   margin: 0 auto 20px;
-  background: #8B5CF6;
+  background: linear-gradient(135deg, #3b82f6, #1e40af);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-icon::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+  transform: rotate(45deg);
+  transition: transform 0.6s;
+}
+
+.nav-card:hover .card-icon::before {
+  transform: rotate(45deg) translate(100%, 100%);
 }
 
 .card-svg {
@@ -159,24 +370,62 @@
 
 .port-info {
   display: inline-block;
-  background: #8B5CF6;
+  background: linear-gradient(135deg, #3b82f6, #1e40af);
   color: white;
   font-size: 12px;
   font-weight: 600;
-  padding: 4px 12px;
+  padding: 6px 14px;
   border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
 }
 
-.footer-info {
+.nav-card:hover .port-info {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* 항해 테마 푸터 */
+.nautical-footer {
   margin-top: 40px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.footer-info p {
+.nautical-footer p {
   font-size: 14px;
-  color: #8B5CF6;
+  color: white;
   font-weight: 600;
-  margin: 0;
+  margin: 0 0 8px 0;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
+
+.compass-indicator {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+}
+
+.compass-indicator span {
+  position: relative;
+  padding-left: 16px;
+}
+
+.compass-indicator span::before {
+  content: '🧭';
+  position: absolute;
+  left: 0;
+  animation: compass-spin 4s linear infinite;
+}
+
+@keyframes compass-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 
 @media (max-width: 768px) {
   .landing-page {
@@ -186,6 +435,7 @@
   .navi-logo {
     flex-direction: column;
     gap: 12px;
+    
   }
 
   .logo-text h1,
