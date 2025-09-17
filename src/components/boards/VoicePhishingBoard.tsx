@@ -78,7 +78,7 @@ const VoicePhishingBoard = () => {
           postDate: result.data.postDate,
           endDate: result.data.endDate || '',
           badges: result.data.badges as ('notice' | 'emergency')[],
-          hasAttachment: result.data.attachments && result.data.attachments.length > 0
+          hasAttachment: !!(result.data.attachments && result.data.attachments.length > 0)
         }
         setPosts(prev => [newPost, ...prev])
         alert('게시물이 성공적으로 작성되었습니다!')

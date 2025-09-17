@@ -77,7 +77,7 @@ class ApiService {
 		});
 	}
 
-	async getPosts(page = 1, limit = 20): Promise<ApiResponse<Post[]>> {
+	async getPosts(_page = 1, _limit = 20): Promise<ApiResponse<Post[]>> {
 		try {
 			console.log("Fetching posts from:", `${API_BASE_URL}/posts`);
 
