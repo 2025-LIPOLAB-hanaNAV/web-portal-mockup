@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import './PostDetail.css'
 import { apiService, type Post, type Attachment } from '../services/api'
+import { getBaseUrl } from '../config/api'
 
 const PostDetail = () => {
   const { boardType, postId } = useParams<{ boardType: string; postId: string }>()
@@ -37,7 +38,7 @@ const PostDetail = () => {
   const handleDownload = (attachment: Attachment) => {
     // 첨부파일 다운로드
     const link = document.createElement('a')
-    link.href = `http://localhost:3001${attachment.downloadUrl}`
+    link.href = `${getBaseUrl()}${attachment.downloadUrl}`
     // original_filename이 있으면 사용, 없으면 name 사용
     link.download = attachment.original_filename || attachment.name
     document.body.appendChild(link)
@@ -63,7 +64,7 @@ const PostDetail = () => {
     // /static/images/ 경로를 완전한 URL로 변환
     return processedContent.replace(
       /src="\/static\/images\//g,
-      'src="http://localhost:3001/static/images/'
+      `src="${getBaseUrl()}/static/images/`
     )
   }
 

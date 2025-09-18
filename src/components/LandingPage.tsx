@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { getChatbotUrl } from '../config/api'
 import './LandingPage.css'
 
 const LandingPage: React.FC = () => {
@@ -25,7 +26,7 @@ const LandingPage: React.FC = () => {
     if (route === 'portal') {
       navigate('/portal')
     } else if (route === 'chatbot') {
-      window.open('http://localhost:8080', '_blank')
+      window.open(getChatbotUrl(), '_blank')
     }
   }
 
