@@ -6,11 +6,11 @@ const Header = () => {
   const location = useLocation()
 
   const handleHomeClick = () => {
-    navigate('/boards/voice-phishing')
+    navigate('/portal/boards/voice-phishing')
   }
 
   const isHomeActive = () => {
-    return location.pathname === '/' || location.pathname.startsWith('/boards/')
+    return location.pathname === '/portal/' || location.pathname.startsWith('/portal/boards/')
   }
 
   return (
