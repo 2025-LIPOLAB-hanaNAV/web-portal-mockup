@@ -84,6 +84,7 @@
 
 .content-table table {
   width: 100%;
+  min-width: 800px;
   border-collapse: collapse;
   font-size: 11px;
   table-layout: fixed;
