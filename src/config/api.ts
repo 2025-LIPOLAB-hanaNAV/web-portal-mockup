@@ -10,7 +10,7 @@ export const API_CONFIG = {
   PRODUCTION: {
     BASE_URL: 'https://web-portal-backend-production-78d3.up.railway.app',
     API_URL: 'https://web-portal-backend-production-78d3.up.railway.app/api',
-    CHATBOT_URL: 'https://your-chatbot-production-url.com'
+    CHATBOT_URL: 'https://web-hana-nav-front-dev.vercel.app'
   }
 }
 
