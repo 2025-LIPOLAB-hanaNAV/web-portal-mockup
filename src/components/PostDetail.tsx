@@ -84,7 +84,7 @@ const PostDetail = () => {
         <div className="post-detail-error">
           <h3>오류가 발생했습니다</h3>
           <p>{error}</p>
-          <button onClick={() => navigate(`/boards/${boardType}`)} className="btn-back">목록으로 돌아가기</button>
+          <button onClick={() => navigate(`/portal/boards/${boardType}`)} className="btn-back">목록으로 돌아가기</button>
         </div>
       </main>
     )
@@ -96,7 +96,7 @@ const PostDetail = () => {
     <main className="main-content">
       <div className="post-detail-header">
         <div className="post-detail-nav">
-          <button onClick={() => navigate(`/boards/${boardType}`)} className="btn-back">← 목록으로</button>
+          <button onClick={() => navigate(`/portal/boards/${boardType}`)} className="btn-back">← 목록으로</button>
         </div>
         
         <div className="post-detail-info">
@@ -162,7 +162,7 @@ const PostDetail = () => {
 
 
       <div className="post-detail-actions">
-        <button onClick={() => navigate(`/boards/${boardType}`)} className="btn-action">목록</button>
+        <button onClick={() => navigate(`/portal/boards/${boardType}`)} className="btn-action">목록</button>
         <button className="btn-action">수정</button>
         <button className="btn-action">삭제</button>
         <button className="btn-action">인쇄</button>
