@@ -26,7 +26,7 @@ const LandingPage: React.FC = () => {
     if (route === 'portal') {
       navigate('/portal')
     } else if (route === 'chatbot') {
-      window.open(getChatbotUrl(), '_blank')
+      navigate(getChatbotUrl())
     }
   }
 
