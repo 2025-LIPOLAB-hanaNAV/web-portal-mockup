@@ -26,7 +26,7 @@ const LandingPage: React.FC = () => {
     if (route === 'portal') {
       navigate('/portal')
     } else if (route === 'chatbot') {
-      window.location.href = getChatbotUrl()
+      window.location.href = 'http://zipbuntu.iptime.org:18080/'
     }
   }
 
